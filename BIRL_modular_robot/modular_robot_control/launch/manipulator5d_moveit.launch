@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<launch>
+  <!--group ns="robot"-->
+
+  <include file="$(find manipulator5d_moveit_config)/launch/manipulator5d_moveit_controller_manager.launch"/>
+
+  <rosparam>
+    dependent_joints:
+      g6_Joint1: {parent: g6_Joint, factor: 1 }
+  </rosparam>
+  
+
+  <node name="canopen_driver" pkg="canopen_motor_node" type="canopen_motor_node" output="screen" clear_params="true">
+					<!--   launch-prefix="gdb -ex run -/-args">-->
+     <rosparam command="load" file="$(find birl_module_canopen)/config/can.yaml" />
+     <rosparam command="load" file="$(find birl_module_canopen)/config/manipulator5d_motors.yaml" />
+<!--     <remap from="joint_states" to="/feedback_joint_states"/> -->
+
+  </node>
+  
+<!-- controllers -->
+  <rosparam command="load" file="$(find modular_robot_control)/config/manipulator5d_controller.yaml" />
+<!--  <rosparam ns="arm" command="load" file="$(find schunk_lwa4p)/config/joint_limits.yaml"/>-->
+<!--  <rosparam ns="arm" command="load" file="$(find schunk_lwa4p)/config/arm_cartesian_controller.yaml"/>-->
+
+   <!-- start_controllers -->
+  <node name="controller_spawner" pkg="controller_manager" type="controller_manager" args="spawn joint_state_controller joint_trajectory_controller" respawn="false" output="screen"/>
+<!--  <node name="controller_loader" pkg="controller_manager" type="controller_manager" args="load joint_group_position_controller I_Joint_position_controller I_Joint_velocity_controller " respawn="false" output="screen"/>-->
+    
+  
+  <!-- control_mode_adapter -->
+<!--  <node  name="control_mode_adapter" pkg="modular_robot_control" type="I_controller_node" cwd="node" respawn="false" output="screen"/>-->
+<!--  <node ns="arm" name="joint_states_relay" pkg="topic_tools" type="relay" args="joint_states /joint_states" cwd="node" respawn="true" output="screen"/>-->
+
+  <!--GRIPPER DEFINITION FINISH-->
+  
+  <!-- ToDo: Cartesian controller -->
+
+  <!-- default robot config -->
+<!--  <rosparam ns="/script_server/arm" command="load" file="$(find schunk_lwa4p)/config/joint_configurations.yaml" />-->
+
+	<!-- Start the Powerball API Node -->
+<!--  <node pkg="sensor_listener" type="schunk_api_node.py" name="schunk_api_node" output="screen"/>	-->
+  
+</launch>

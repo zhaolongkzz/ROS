@@ -1,0 +1,5 @@
+<launch> 
+<node name= "publisher" pkg= "minimal_nodes" type= "sleepy_minimal_publisher" /> 
+<!--type此处修改了为sleepy_minimal_publisher,则实现ros::Rate loopRate(1),文中为ros::Rate naptime(1.0);-->
+<node name= "subscriber" pkg= "minimal_nodes" type= "minimal_subscriber" /> 
+</launch> 
